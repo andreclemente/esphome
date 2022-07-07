@@ -10,7 +10,6 @@ namespace ade7753 {
 
 class ADE7753 : public i2c::I2CDevice, public PollingComponent {
  public:
-  void set_irq_pin(InternalGPIOPin *irq_pin) { irq_pin_ = irq_pin; }
   void set_voltage_sensor(sensor::Sensor *voltage_sensor) { voltage_sensor_ = voltage_sensor; }
   void set_current_a_sensor(sensor::Sensor *current_a_sensor) { current_a_sensor_ = current_a_sensor; }
   void set_active_power_a_sensor(sensor::Sensor *active_power_a_sensor) {
@@ -19,9 +18,6 @@ class ADE7753 : public i2c::I2CDevice, public PollingComponent {
 
 
   void setup() override {
-    if (this->irq_pin_ != nullptr) {
-      this->irq_pin_->setup();
-    }
     this->set_timeout(100, [this]() {
       this->ade_write_8_(0x0010, 0x04);
       this->ade_write_8_(0x00FE, 0xAD);
@@ -79,7 +75,6 @@ class ADE7753 : public i2c::I2CDevice, public PollingComponent {
     return i2c::ERROR_OK;
   }
 
-  InternalGPIOPin *irq_pin_ = nullptr;
   bool is_setup_{false};
   sensor::Sensor *voltage_sensor_{nullptr};
   sensor::Sensor *current_a_sensor_{nullptr};
