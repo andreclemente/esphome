@@ -19,7 +19,6 @@ DEPENDENCIES = ["spi"]
 ade7753_ns = cg.esphome_ns.namespace("ade7753")
 ADE7753 = ade7753_ns.class_("ADE7753", cg.PollingComponent, spi.SPIDevice)
 
-CONF_IRQ_PIN = "irq_pin"
 CONF_CURRENT_A = "current_a"
 CONF_ACTIVE_POWER_A = "active_power_a"
 
@@ -57,10 +56,6 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     await spi.register_spi_device(var, config)
-
-    if CONF_IRQ_PIN in config:
-        irq_pin = await cg.gpio_pin_expression(config[CONF_IRQ_PIN])
-        cg.add(var.set_irq_pin(irq_pin))
 
     for key in [
         CONF_VOLTAGE,
