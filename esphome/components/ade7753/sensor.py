@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import sensor, i2c
+from esphome.components import sensor, spi
 from esphome import pins
 from esphome.const import (
     CONF_ID,
@@ -14,10 +14,10 @@ from esphome.const import (
     UNIT_WATT,
 )
 
-DEPENDENCIES = ["i2c"]
+DEPENDENCIES = ["spi"]
 
-ade7953_ns = cg.esphome_ns.namespace("ade7753")
-ADE7953 = ade7753_ns.class_("ADE7753", cg.PollingComponent, i2c.I2CDevice)
+ade7753_ns = cg.esphome_ns.namespace("ade7753")
+ADE7753 = ade7753_ns.class_("ADE7753", cg.PollingComponent, spi.SPIDevice)
 
 CONF_IRQ_PIN = "irq_pin"
 CONF_CURRENT_A = "current_a"
@@ -49,14 +49,14 @@ CONFIG_SCHEMA = (
         }
     )
     .extend(cv.polling_component_schema("60s"))
-    .extend(i2c.i2c_device_schema(0x38))
+    .extend(spi.spi_device_schema(0x38))
 )
 
 
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-    await i2c.register_i2c_device(var, config)
+    await spi.register_spi_device(var, config)
 
     if CONF_IRQ_PIN in config:
         irq_pin = await cg.gpio_pin_expression(config[CONF_IRQ_PIN])
