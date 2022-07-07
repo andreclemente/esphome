@@ -8,7 +8,6 @@ static const char *const TAG = "ade7753";
 
 void ADE7753::dump_config() {
   ESP_LOGCONFIG(TAG, "ADE7753:");
-  LOG_PIN("  IRQ Pin: ", irq_pin_);
   LOG_I2C_DEVICE(this);
   LOG_UPDATE_INTERVAL(this);
   LOG_SENSOR("  ", "Voltage Sensor", this->voltage_sensor_);
