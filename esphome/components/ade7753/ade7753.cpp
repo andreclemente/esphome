@@ -8,7 +8,7 @@ static const char *const TAG = "ade7753";
 
 void ADE7753::dump_config() {
   ESP_LOGCONFIG(TAG, "ADE7753:");
-  LOG_I2C_DEVICE(this);
+  LOG_SPI_DEVICE(this);
   LOG_UPDATE_INTERVAL(this);
   LOG_SENSOR("  ", "Voltage Sensor", this->voltage_sensor_);
   LOG_SENSOR("  ", "Current A Sensor", this->current_a_sensor_);
@@ -16,7 +16,7 @@ void ADE7753::dump_config() {
 }
 
 #define ADE_PUBLISH_(name, val, factor) \
-  if (err == i2c::ERROR_OK && this->name##_sensor_) { \
+  if (err == spi::ERROR_OK && this->name##_sensor_) { \
     float value = (val) / (factor); \
     this->name##_sensor_->publish_state(value); \
   }
@@ -27,7 +27,7 @@ void ADE7753::update() {
     return;
 
   uint32_t val;
-  i2c::ErrorCode err = ade_read_32_(0x0312, &val);
+  spi::ErrorCode err = ade_read_32_(0x0312, &val);
   ADE_PUBLISH(active_power_a, (int32_t) val, 154.0f);
   err = ade_read_32_(0x031A, &val);
   ADE_PUBLISH(current_a, (uint32_t) val, 100000.0f);
