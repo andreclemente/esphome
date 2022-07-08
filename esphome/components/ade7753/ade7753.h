@@ -8,7 +8,8 @@
 namespace esphome {
 namespace ade7753 {
 
-class ADE7753 : public spi::SPIDevice, public PollingComponent {
+class ADE7753 : public spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW,
+                                                 spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_2MHZ>, public PollingComponent {
  public:
   void set_voltage_sensor(sensor::Sensor *voltage_sensor) { voltage_sensor_ = voltage_sensor; }
   void set_current_a_sensor(sensor::Sensor *current_a_sensor) { current_a_sensor_ = current_a_sensor; }
